@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager S;
     public float m_countdownLength = 3f;
+    public float m_backgroundSpeed = 0.2f;
     public GameObject m_player;
     public Transform m_ground;
 
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour {
     private void Update()
     {
         // Keep track to see if the countdown is over
-        if (m_countdownLength <= 0f)
+        if (m_countdownLength <= 0f && b_isPlayerAlive))
         {
             b_isGameActive = true;
             m_player.GetComponent<Animator>().SetBool("GameStarted", true);
