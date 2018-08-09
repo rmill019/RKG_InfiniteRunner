@@ -41,8 +41,9 @@ public class FollowTarget : MonoBehaviour {
 
     void GameOverCamera ()
     {
-        Vector3 pos = m_target.position;
-        pos.y = Mathf.Sin(Time.time * m_deathYMovement);
+        Vector3 pos = m_pos;
+        pos.y -= 1f;
+        pos.y += Mathf.Sin(Time.time * m_deathYMovement);
         pos.x += Mathf.Cos(Time.time * m_deathXMovement);
         pos.z = m_zDistance;
 

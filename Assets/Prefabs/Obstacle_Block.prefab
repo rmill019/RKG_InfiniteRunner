@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212189136400413262}
   - component: {fileID: 114117810355591350}
   - component: {fileID: 61601495182231516}
+  - component: {fileID: 50003305581795654}
   m_Layer: 0
   m_Name: Obstacle_Block
   m_TagString: Obstacle
@@ -42,6 +43,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50003305581795654
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1482263600237786}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!61 &61601495182231516
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -79,12 +100,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_obstacleType: 1
-  m_lifeSpan: 1.5
-  m_speedX: 0
+  m_lifeSpan: 5
   m_xMinDistance: 20
   m_xMaxDistance: 40
-  m_yMinDistance: 20
-  m_yMaxDistance: 40
+  m_yMinDistance: 2
+  m_yMaxDistance: 5
 --- !u!212 &212189136400413262
 SpriteRenderer:
   m_ObjectHideFlags: 1

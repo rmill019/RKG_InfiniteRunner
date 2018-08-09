@@ -29,45 +29,52 @@ public class ObstacleSpawner : MonoBehaviour {
     // Use this for initialization
     void Start () {
         m_pooledPipeObstacles = new List<GameObject>();
+        m_pooledBlockObstacles = new List<GameObject>();
 
 		// Create the list of pooled pipe obstacles
         for (int i = 0; i < m_amountToPool; i++)
         {
             GameObject pipe = (GameObject)Instantiate(m_pipePrefab);
+            GameObject block = (GameObject)Instantiate(m_blockPrefab);
+            
             pipe.SetActive(false);
+            block.SetActive(false);
+
             m_pooledPipeObstacles.Add(pipe);
+            m_pooledBlockObstacles.Add(block);
         }
 
-        m_nextSpawnTime = Time.time + m_timeBetweenSpawns;
+        // We cannot spawn until the initial countdown has finished. So the initial spawnTime needs to take this into account
+        m_nextSpawnTime = Time.time + GameManager.S.m_countdownLength + m_timeBetweenSpawns;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (GameManager.S.IsGameActive)
+        if (GameManager.S.IsGameActive && Time.time >= m_nextSpawnTime)
         {
-            if (Time.time >= m_nextSpawnTime)
-            {
-                // spawn / activate prefab
-                SpawnObstacle();
-                m_nextSpawnTime = Time.time + m_timeBetweenSpawns;
-            }
+            // spawn / activate prefab
+            SpawnObstacle();
+
+            // Reset the next spawn time
+            m_nextSpawnTime = Time.time + m_timeBetweenSpawns;
         }
-		
 	}
+
+
 
     // We are using object Pooling so we are actually activating rather than "spawning"
     void SpawnObstacle ()
     {
         GameObject objectToSpawn;
-        //float random = Random.Range(0f, 1f);
+        float random = Random.Range(0f, 1f);
 
-        //if (random < 0.5f)
-        //    objectToSpawn = GetPooledBlockObstacle();
-        //else
-        //    objectToSpawn = GetPooledPipeObstacle();
+        if (random < 0.5f)
+            objectToSpawn = GetPooledBlockObstacle();
+        else
+            objectToSpawn = GetPooledPipeObstacle();
 
-        // For now only test returning pipes
-        objectToSpawn = GetPooledPipeObstacle();
+        ////For now only test returning pipes
+        //objectToSpawn = GetPooledBlockObstacle();
 
         // Position the object
         if (objectToSpawn != null)
