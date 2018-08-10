@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour {
             ManageTimer();
         
         if (!GameManager.S.IsPlayerAlive)
-            Invoke("EnableGameOverUI", 2f);
+            Invoke("EnableGameOverUI", .5f);
         
     }
 

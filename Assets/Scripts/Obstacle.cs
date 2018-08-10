@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ObstacleType { Grounded, InAir }
+public enum ObstacleType { Grounded, InAir, Collectable }
 
 public class Obstacle : MonoBehaviour {
 
+    // MAGIC NUMBERS
     public static float SPEED_X = 20f;
+    public static float m_coinHeightOffset = 4f;
+    public static float m_pipeHeightOffset = 2.5f;
 
     [SerializeField]
     private ObstacleType m_obstacleType;
 
     [SerializeField]
     [Range(0.5f, 5f)]
-    private float m_lifeSpan = 0.5f;
+    private float m_lifeSpan = 0.02f;
 
     // These range variables will be removed once we find the appropriate range for spawning items
     [Range(10f, 20f)]
@@ -35,6 +38,7 @@ public class Obstacle : MonoBehaviour {
 
     private Vector3 m_spawnLocation = Vector3.zero;
 
+
     private void OnEnable()
     {
         SetSpawnLocation (m_obstacleType);
@@ -46,7 +50,10 @@ public class Obstacle : MonoBehaviour {
         
         if (gameObject.activeInHierarchy)
         {
-            transform.Translate(-transform.right * SPEED_X * Time.deltaTime);
+            if (m_obstacleType == ObstacleType.Grounded)
+                transform.Translate(-transform.right * SPEED_X * Time.deltaTime);
+            else
+                transform.Translate(-transform.right * SPEED_X * Time.deltaTime);
         }
 
         // Once we have reached or passed our lifespan then deactivate this obstacle and send it back
@@ -64,35 +71,25 @@ public class Obstacle : MonoBehaviour {
         switch (type)
         {
             case ObstacleType.Grounded:
-                xPos =  GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
-                yPos = GameManager.S.m_ground.position.y + GetComponent<BoxCollider2D>().bounds.extents.y;
+                xPos = GameManager.S.m_ground.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
+                yPos = GameManager.S.m_ground.position.y + m_pipeHeightOffset;
+                print("Xpos: " + xPos + " yPos: " + yPos);
                 break;
             case ObstacleType.InAir:
                 xPos = GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
-                float rand = Choose(m_yMinDistance, m_yMaxDistance);
+                float rand = Utilities.Choose(m_yMinDistance, m_yMaxDistance);
                 // We add rand to groundPosition.y because if we try to assign while the player is jumping our positioning could be off
                 yPos = GameManager.S.m_ground.position.y + rand;    
+                break;
+            case ObstacleType.Collectable:
+                xPos = GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
+                yPos = GameManager.S.m_ground.position.y + m_coinHeightOffset;
                 break;
             default:
                 break;
         }
 
         m_spawnLocation = new Vector3(xPos, yPos, 0);
-    }
-
-    // Randomly choose one of the given values
-    T Choose<T> (T x, T y)
-    {
-        float random = Random.Range(0f, 1f);
-
-        if (random < 0.5f)
-        {
-            return x;
-        }
-        else
-        {
-            return y;
-        }
     }
 
     // Properties

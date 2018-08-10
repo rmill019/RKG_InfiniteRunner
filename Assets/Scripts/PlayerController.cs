@@ -76,9 +76,11 @@ public class PlayerController : MonoBehaviour {
 
     void SetPlayerState ()
     {
+
         // Check if we are on the "ground"
         if (transform.position.y <= m_startPos.y)
         {
+            m_anim.SetBool("IsJumping", false);
             transform.position = new Vector3(transform.position.x, m_startPos.y, transform.position.z);    //REFACTOR THIS LINE
             m_playerState = PlayerState.Running;
         }
@@ -86,7 +88,10 @@ public class PlayerController : MonoBehaviour {
         // Changing our Jump and roll State for PC and Mobile
         #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
             if (m_playerState == PlayerState.Running && Input.GetButtonDown("Jump"))
+            {
+                m_anim.SetBool("IsJumping", true);
                 m_playerState = PlayerState.Jumping;
+            }
 
             if (m_playerState == PlayerState.Running && Input.GetButtonDown("Roll"))
                 m_playerState = PlayerState.Rolling;

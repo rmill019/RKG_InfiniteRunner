@@ -72,7 +72,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -103,8 +103,8 @@ MonoBehaviour:
   m_lifeSpan: 5
   m_xMinDistance: 20
   m_xMaxDistance: 40
-  m_yMinDistance: 20
-  m_yMaxDistance: 40
+  m_yMinDistance: 0
+  m_yMaxDistance: 0
 --- !u!212 &212690548357490392
 SpriteRenderer:
   m_ObjectHideFlags: 1

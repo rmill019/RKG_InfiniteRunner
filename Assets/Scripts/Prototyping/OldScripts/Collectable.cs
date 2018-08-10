@@ -12,7 +12,7 @@ public class Collectable : MonoBehaviour {
         {
             AudioManager.S.PlayClip(AudioManager.S.coinCollectedClip);
             GameManager.S.UpdateScore(m_value);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
