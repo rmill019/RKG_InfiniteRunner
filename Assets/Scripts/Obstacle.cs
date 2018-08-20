@@ -63,7 +63,7 @@ public class Obstacle : MonoBehaviour {
 
 	}
 
-    void SetSpawnLocation (ObstacleType type)
+    public void SetSpawnLocation (ObstacleType type)
     {
         float xPos = 0;
         float yPos = 0;
@@ -73,7 +73,7 @@ public class Obstacle : MonoBehaviour {
             case ObstacleType.Grounded:
                 xPos = GameManager.S.m_ground.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
                 yPos = GameManager.S.m_ground.position.y + m_pipeHeightOffset;
-                print("Xpos: " + xPos + " yPos: " + yPos);
+                //print("Xpos: " + xPos + " yPos: " + yPos);
                 break;
             case ObstacleType.InAir:
                 xPos = GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
