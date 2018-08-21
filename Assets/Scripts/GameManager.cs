@@ -6,13 +6,20 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager S;
     public ObjectSpawner m_objSpawner;
-    //public CoinSpawner m_coinSpawner;
 
     public float m_countdownLength = 3f;
     public float m_backgroundSpeed = 0.2f;
     public float m_timeBetweenSpawns = 2f;
+    [Tooltip("How often should the difficulty increase")]
+    public float m_difficultyInterval = 5f;
     public GameObject m_player;
     public Transform m_ground;
+
+    [Header("These setting affect the difficuly scaling")]
+    public float m_backgroundSpeedInc = 0.1f;
+    public float m_spawnIntervalDec = 0.025f;
+    public float m_playerGravityInc = 0.25f;
+    public float m_obstacleSpeedInc = 0.25f;
 
     private int m_currentScore;
     private bool b_isPlayerAlive = true;
@@ -21,6 +28,7 @@ public class GameManager : MonoBehaviour {
     private bool firstTimeSpawn = true;
     private float m_nextObstacleSpawnTime;
     private float m_nextCoinFormationSpawnTime;
+    private float m_increaseDifficultyTime = 0;
 
     private void Awake()
     {
@@ -46,6 +54,9 @@ public class GameManager : MonoBehaviour {
 
         // Set Coin spawn time to a ridiculously high number to ensure that all obstacles are spawned first;
         m_nextCoinFormationSpawnTime = Time.time + 1000f;
+
+        // Set when we should increase difficulty
+        m_increaseDifficultyTime = Time.time + m_difficultyInterval;
     }
 
     private void Update()
@@ -55,13 +66,30 @@ public class GameManager : MonoBehaviour {
         {
             b_isGameActive = true;
             m_player.GetComponent<Animator>().SetBool("GameStarted", true);
-            //if (firstTimeSpawn)
-            //{
-            //    StartCoroutine(ObjectSpawner.S.SpawnCoins());
-            //    firstTimeSpawn = false;
-            //}
         }
 
+        DetermineSpawning();
+
+        CheckForDifficultyIncrease();
+    }
+
+    // This is called every set amount of time to adjust parameters that will affect difficulty
+    public void CheckForDifficultyIncrease ()
+    {
+        if (Time.time > m_increaseDifficultyTime)
+        {
+            print("INCREASE DIFFICULTY");
+            m_backgroundSpeed += m_backgroundSpeedInc;
+            m_timeBetweenSpawns -= m_spawnIntervalDec;
+            m_player.GetComponent<PlayerController>().m_fallSpeed += m_playerGravityInc;
+            Obstacle.SPEED_X += m_obstacleSpeedInc;
+            // Reset the time to increase difficulty
+            m_increaseDifficultyTime = Time.time +  m_difficultyInterval;
+        }
+    }
+
+    public void DetermineSpawning ()
+    {
         if (Time.time >= m_nextObstacleSpawnTime)
         {
             print("Starting Obstacle Coroutine");
@@ -70,7 +98,7 @@ public class GameManager : MonoBehaviour {
 
         if (Time.time >= m_nextCoinFormationSpawnTime)
         {
-            print("Starting Coin Coroutine");
+            print("Starting CoinSpawn");
             ObjectSpawner.S.SpawnCoins();
         }
     }

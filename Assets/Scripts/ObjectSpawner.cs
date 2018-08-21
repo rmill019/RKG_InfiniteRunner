@@ -16,10 +16,17 @@ public class ObjectSpawner : MonoBehaviour {
     public GameObject m_coinPrefab;
 
     [Header("Information about coin formation spawning")]
-    [Range(2,10)]
-    public int m_columnAndRowsMin;
-    [Range(10, 20)]
-    public int m_columnAndRowsMax;
+
+    [Tooltip("The columns spawned will be between 1 and this value")]
+    [Range(2,20)]
+    public int m_columnsMax;
+
+    [Tooltip("The rows spawned will be between 1 and this value")]
+    [Range(2, 20)]
+    public int m_rowsMax;
+
+    public int numRows;
+    public int numCols;
     public float m_coinSpacing = 1f;
 
     private List<GameObject> m_pooledBlockObstacles;
@@ -65,15 +72,6 @@ public class ObjectSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        //if (GameManager.S.IsGameActive && Time.time >= m_nextSpawnTime)
-        //{
-        //    // Pick Random # of Objects to spawn
-        //    // spawn / activate prefab
-        //    //SpawnObject();
-
-        //    // Reset the next spawn time
-        //    m_nextSpawnTime = Time.time + m_timeBetweenSpawns;
-        //}
 	}
 
     public IEnumerator SpawnObstacles ()
@@ -99,6 +97,8 @@ public class ObjectSpawner : MonoBehaviour {
             {
                 obstacleToSpawn.SetActive(true);
                 obstacleToSpawn.transform.position = obstacleToSpawn.GetComponent<Obstacle>().SpawnLocation;
+                // Set the CanMove flag to true so that it will update it's position while active
+                obstacleToSpawn.GetComponent<Obstacle>().CanMove = true;
             }
 
             yield return new WaitForSeconds(GameManager.S.m_timeBetweenSpawns);
@@ -113,11 +113,13 @@ public class ObjectSpawner : MonoBehaviour {
         // Setting this at the start of the Coroutine so that it won't get called in Update: Hack!!
         GameManager.S.CoinSpawnTime = Time.time + 1000f;
 
-        int numCols = Random.Range(m_columnAndRowsMin, m_columnAndRowsMax);
-        int numRows = Random.Range(m_columnAndRowsMin, m_columnAndRowsMax);
+        int numCols = Random.Range(1, m_columnsMax);
+        int numRows = Random.Range(1, m_rowsMax);
 
         // Storing coins in a one-dimensional array to make processing it easier
+        //GameObject[] coins = new GameObject[numRows * numCols];
         GameObject[] coins = new GameObject[numRows * numCols];
+        //print("Coins Length: " + coins.Length);
         //print("Spawning " + numCols + " X " + numRows + " coins");
 
         Vector3 prevCoinPos = Vector3.zero;
@@ -125,32 +127,37 @@ public class ObjectSpawner : MonoBehaviour {
         Vector3 firstCoinPos = Vector3.zero;
         Vector3 targetPos = Vector3.zero;
 
-        for (int i = 0; i < coins.Length - 1; i++)
+        // Spawn the coins
+        for (int i = 0; i < coins.Length; i++)
         {
             GameObject coin = GetPooledCoin();
             coin.SetActive(true);
             coins[i] = coin;
 
             // If we are at the beginning of a row
-            if (i % numCols == 0)
+            if (i % numCols == 0 && i != 0)
             {
                 targetPos = firstCoinPos;
-                targetPos.y -= m_coinSpacing;
+                targetPos.y += m_coinSpacing * (i / numCols);
                 coins[i].transform.position = targetPos;
                 prevCoinPos = coins[i].transform.position;
+                //print("Coin #: " + (i) + " Spawning modulus of 4 at: " + targetPos.ToString());
             }
             // else we are on the next column of the row
-            else
+            else if (i != 0)
             {
                 targetPos = prevCoinPos;
                 targetPos.x += m_coinSpacing;
                 coins[i].transform.position = targetPos;
                 prevCoinPos = targetPos;
+                //print("Coin # " + (i) + " location: " + targetPos.ToString());
             }
 
+            // Leaving this as a seperate if statement to make sure it gets fired for i = 0
             if (i == 0)
             {
-                firstCoinPos = coins[i].transform.position;
+                //print("Spawning first coint at: " + coins[0].transform.position.ToString());
+                firstCoinPos = coins[0].transform.position;
                 prevCoinPos = firstCoinPos;
             }
            
@@ -158,22 +165,11 @@ public class ObjectSpawner : MonoBehaviour {
         // Once we finish all the spawning of coins set our next Obstacle spawn time
         GameManager.S.ObstacleSpawnTime = Time.time + GameManager.S.m_timeBetweenSpawns;
 
-        //// This whole spawn and positioning process needs to be re-worked
-        //for (int r = 0; r < numRows; r++)
-        //{
-        //    for (int c = 0; c < numCols; c++)
-        //    {
-        //        GameObject coin = GetPooledCoin();
-        //        coin.SetActive(true);
-
-        //    }
-
-        //    //GameManager.S.CanSpawnObstacles = true;
-        //    yield return new WaitForSeconds(GameManager.S.m_timeBetweenSpawns);
-        //}
-        //// Once we finish all the spawning of coins set our next Obstacle spawn time
-        //GameManager.S.ObstacleSpawnTime = Time.time + GameManager.S.m_timeBetweenSpawns;
-
+        // Tell each coin it can now move since they have all spawned
+        for (int i = 0; i < coins.Length; i++)
+        {
+            coins[i].GetComponent<Obstacle>().CanMove = true;
+        }
     }
 
 

@@ -979,6 +979,11 @@ Prefab:
       propertyPath: m_fallSpeed
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 70538297401926162, guid: 3719d15c7ccc8d94bba26739e1c36391,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3719d15c7ccc8d94bba26739e1c36391, type: 2}
   m_IsPrefabParent: 0
@@ -1815,12 +1820,37 @@ Prefab:
     - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
         type: 2}
       propertyPath: m_coinAmountToPool
-      value: 500
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
         type: 2}
       propertyPath: m_obstacleAmountToPool
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: numRows
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: numCols
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_coinSpacing
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_columnsMax
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_rowsMax
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c30df6f0da6c0b1479f5e7b6cb811071, type: 2}

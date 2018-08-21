@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour {
     {
         m_anim.SetTrigger("Rolling");
         b_collidersModified = true;
-        GetComponent<CapsuleCollider2D>().size /= 4f;
+        GetComponent<CapsuleCollider2D>().size /= 6f;
         m_colliderTimer = Time.time + GetAnimatorStateLength("Roll");
     }
 
