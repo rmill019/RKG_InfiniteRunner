@@ -51,9 +51,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b51a9267699bf4045b4d3bc4241dee12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_amountToPool: 5
+  m_obstacleAmountToPool: 5
+  m_coinAmountToPool: 100
   m_pipePrefab: {fileID: 1479130430627606, guid: aed736b71c34b3641a91408fa6ca1886,
     type: 2}
   m_blockPrefab: {fileID: 1482263600237786, guid: 76e7a1c073fdc894faf4aa380545547a,
     type: 2}
-  m_timeBetweenSpawns: 2
+  m_coinPrefab: {fileID: 0}
+  m_columnsMax: 0
+  m_rowsMax: 0
+  numRows: 0
+  numCols: 0
+  m_coinSpacing: 1

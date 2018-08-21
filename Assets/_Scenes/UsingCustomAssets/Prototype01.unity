@@ -979,6 +979,11 @@ Prefab:
       propertyPath: m_fallSpeed
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 70538297401926162, guid: 3719d15c7ccc8d94bba26739e1c36391,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3719d15c7ccc8d94bba26739e1c36391, type: 2}
   m_IsPrefabParent: 0
@@ -1782,6 +1787,71 @@ Prefab:
       value: 
       objectReference: {fileID: 1285575641257648, guid: 8ce3b07587355bc46b24312d2a420fbc,
         type: 2}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_amountToPool
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_RowAndColumnRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_coinRows
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_coinColumns
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_columnAndRowsMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_columnAndRowsMax
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_coinAmountToPool
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_obstacleAmountToPool
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: numRows
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: numCols
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_coinSpacing
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_columnsMax
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+        type: 2}
+      propertyPath: m_rowsMax
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c30df6f0da6c0b1479f5e7b6cb811071, type: 2}
   m_IsPrefabParent: 0
@@ -4235,6 +4305,16 @@ Prefab:
       propertyPath: m_ground
       value: 
       objectReference: {fileID: 1522028188}
+    - target: {fileID: 114595910957109838, guid: 0705eaa4efde3a24bafdbfc21e0dc6dd,
+        type: 2}
+      propertyPath: b_CanSpawnObstacles
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114595910957109838, guid: 0705eaa4efde3a24bafdbfc21e0dc6dd,
+        type: 2}
+      propertyPath: m_objSpawner
+      value: 
+      objectReference: {fileID: 1821607433}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0705eaa4efde3a24bafdbfc21e0dc6dd, type: 2}
   m_IsPrefabParent: 0
@@ -4298,6 +4378,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4196176400914896, guid: fa2ddabb680403740be84c06ef56bc4d,
     type: 2}
   m_PrefabInternal: {fileID: 769794829}
+--- !u!114 &1821607433 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114670700077600570, guid: c30df6f0da6c0b1479f5e7b6cb811071,
+    type: 2}
+  m_PrefabInternal: {fileID: 578356830}
+  m_Script: {fileID: 11500000, guid: b51a9267699bf4045b4d3bc4241dee12, type: 3}
 --- !u!4 &1837060946 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4196176400914896, guid: fa2ddabb680403740be84c06ef56bc4d,

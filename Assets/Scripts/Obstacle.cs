@@ -8,7 +8,8 @@ public class Obstacle : MonoBehaviour {
 
     // MAGIC NUMBERS
     public static float SPEED_X = 20f;
-    public static float m_coinHeightOffset = 4f;
+    public static float m_coinHeightOffsetMin = 4f;
+    public static float m_coinHeightOffsetMax = 8f;
     public static float m_pipeHeightOffset = 2.5f;
 
     [SerializeField]
@@ -19,11 +20,11 @@ public class Obstacle : MonoBehaviour {
     private float m_lifeSpan = 0.02f;
 
     // These range variables will be removed once we find the appropriate range for spawning items
-    [Range(10f, 20f)]
+    [Range(10f, 40f)]
     [SerializeField]
     private float m_xMinDistance;
 
-    [Range(21f, 40f)]
+    [Range(21f, 100f)]
     [SerializeField]
     private float m_xMaxDistance;
 
@@ -33,22 +34,22 @@ public class Obstacle : MonoBehaviour {
 
     [SerializeField]
     private float m_yMaxDistance = .15f;
-
     private float m_timeToDelete;
-
     private Vector3 m_spawnLocation = Vector3.zero;
+    private bool b_canMove = false;
 
 
     private void OnEnable()
     {
         SetSpawnLocation (m_obstacleType);
+        transform.position = m_spawnLocation;
         m_timeToDelete = Time.time + m_lifeSpan;
     }
 
     // Update is called once per frame
     void Update () {
         
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy && b_canMove)
         {
             if (m_obstacleType == ObstacleType.Grounded)
                 transform.Translate(-transform.right * SPEED_X * Time.deltaTime);
@@ -63,7 +64,7 @@ public class Obstacle : MonoBehaviour {
 
 	}
 
-    void SetSpawnLocation (ObstacleType type)
+    public void SetSpawnLocation (ObstacleType type)
     {
         float xPos = 0;
         float yPos = 0;
@@ -73,7 +74,7 @@ public class Obstacle : MonoBehaviour {
             case ObstacleType.Grounded:
                 xPos = GameManager.S.m_ground.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
                 yPos = GameManager.S.m_ground.position.y + m_pipeHeightOffset;
-                print("Xpos: " + xPos + " yPos: " + yPos);
+                //print("Xpos: " + xPos + " yPos: " + yPos);
                 break;
             case ObstacleType.InAir:
                 xPos = GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
@@ -83,7 +84,7 @@ public class Obstacle : MonoBehaviour {
                 break;
             case ObstacleType.Collectable:
                 xPos = GameManager.S.m_player.transform.position.x + Random.Range(m_xMinDistance, m_xMaxDistance);
-                yPos = GameManager.S.m_ground.position.y + m_coinHeightOffset;
+                yPos = GameManager.S.m_ground.position.y + Random.Range (m_coinHeightOffsetMin, m_coinHeightOffsetMax);
                 break;
             default:
                 break;
@@ -96,5 +97,11 @@ public class Obstacle : MonoBehaviour {
     public Vector3 SpawnLocation
     {
         get { return m_spawnLocation; }
+    }
+
+    public bool CanMove
+    {
+        get { return b_canMove; }
+        set { b_canMove = value; }
     }
 }
