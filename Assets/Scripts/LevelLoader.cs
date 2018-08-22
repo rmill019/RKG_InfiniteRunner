@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-
     bool b_canStart = false;
     AsyncOperation asyncLoad;
 
