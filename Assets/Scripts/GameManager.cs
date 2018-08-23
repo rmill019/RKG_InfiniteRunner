@@ -58,7 +58,10 @@ public class GameManager : MonoBehaviour {
         if (scores == null)
         {
             for (int i = 0; i < 10; i++)
-                m_highScores[i] = 0;
+            {
+                m_highScores.Add(0);
+                //m_highScores[i] = 0;
+            }
         }
         else
         {
@@ -70,6 +73,7 @@ public class GameManager : MonoBehaviour {
 
         // We cannot spawn until the initial countdown has finished. So the initial spawnTime needs to take this into account
         m_nextObstacleSpawnTime = Time.time + GameManager.S.m_countdownLength + m_timeBetweenSpawns;
+        print("Setting Spawn time to: " + m_nextObstacleSpawnTime);
 
         // Set Coin spawn time to a ridiculously high number to ensure that all obstacles are spawned first;
         m_nextCoinFormationSpawnTime = Time.time + 1000f;
@@ -137,6 +141,7 @@ public class GameManager : MonoBehaviour {
     {
         if (Time.time >= m_nextObstacleSpawnTime)
         {
+            print("Next Obstacle Spawn Time: " + m_nextObstacleSpawnTime);
             print("Starting Obstacle Coroutine");
             StartCoroutine(ObjectSpawner.S.SpawnObstacles());
         }

@@ -101,8 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_obstacleType: 1
   m_lifeSpan: 5
-  m_xMinDistance: 20
-  m_xMaxDistance: 40
+  m_xMinDistance: 35
+  m_xMaxDistance: 52
   m_yMinDistance: 2
   m_yMaxDistance: 7
 --- !u!212 &212189136400413262

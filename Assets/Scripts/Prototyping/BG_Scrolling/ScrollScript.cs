@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScrollScript : MonoBehaviour {
 
     public bool b_shouldMove = true;
-    private float speed = 0;
+    public float speed = 0;
 
     private void Start()
     {
