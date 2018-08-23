@@ -21,8 +21,8 @@ EditorBuildSettings:
     path: Assets/_Scenes/UsingCustomAssets/TitleScreen02.unity
     guid: 752b57ac38dc5de4b8f87d1a80f480be
   - enabled: 1
-    path: Assets/_Scenes/UsingCustomAssets/Prototype01.unity
-    guid: 119309423123f2f4b96535a23f607052
-  - enabled: 1
     path: Assets/_Scenes/UsingCustomAssets/HighScore_Prototype.unity
     guid: 42a6235dc5adcc641bf3ab421860196e
+  - enabled: 1
+    path: Assets/_Scenes/UsingCustomAssets/Prototype01.unity
+    guid: 119309423123f2f4b96535a23f607052

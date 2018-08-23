@@ -1,16 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
-public class HighScoreTracker : MonoBehaviour {
+public class HighScoreTracker
+{
+    private bool b_canSave = false;
+    // Properties
+    public bool CanSave
+    {
+        get { return b_canSave; }
+        set { b_canSave = value; }
+    }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void SaveScores (List<int> listToSave)
+    {
+        string filePath = Application.persistentDataPath + "\\HighScores.dat";
+
+        // Save the data
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(filePath);    // What if the file exists
+        PlayerHighScores data = new PlayerHighScores(listToSave);
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public PlayerHighScores LoadScores ()
+    {
+        string filePath = Application.persistentDataPath + "\\HighScores.dat";
+        // Make sure our file exists
+        if (File.Exists(filePath))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(filePath, FileMode.Open);
+            PlayerHighScores data = (PlayerHighScores)bf.Deserialize(file);
+            file.Close();
+
+            return data;
+        }
+        else
+            return null;
+    }
 }
