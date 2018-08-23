@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -24,11 +23,14 @@ public class GameManager : MonoBehaviour {
     private int m_currentScore;
     private bool b_isPlayerAlive = true;
     private bool b_isGameActive = false;
-    private bool b_CanSpawnObstacles = false; //TODO Do we need this after moving to a time based system
     private bool firstTimeSpawn = true;
     private float m_nextObstacleSpawnTime;
     private float m_nextCoinFormationSpawnTime;
     private float m_increaseDifficultyTime = 0;
+
+    // High Score Tracking variables
+    private List<int> m_highScores;
+    private HighScoreTracker m_highScoreTracker;
 
     private void Awake()
     {
@@ -36,6 +38,12 @@ public class GameManager : MonoBehaviour {
             S = this;
         else
             Destroy(this.gameObject);
+
+        m_highScores = new List<int>();
+        m_highScoreTracker = new HighScoreTracker
+        {
+            CanSave = true
+        };
 
         // Validate Countdown Length
         if (m_countdownLength < 3f)
@@ -45,6 +53,17 @@ public class GameManager : MonoBehaviour {
     private void Start()
     {
         m_currentScore = 0;
+        // Initialize m_highScores to 0 if no file exists on Disk
+        PlayerHighScores scores = m_highScoreTracker.LoadScores();
+        if (scores == null)
+        {
+            for (int i = 0; i < 10; i++)
+                m_highScores[i] = 0;
+        }
+        else
+        {
+            m_highScores = scores.HighScores;
+        }
 
         if (m_player == null)
             m_player = GameObject.FindGameObjectWithTag("Player");
@@ -69,8 +88,33 @@ public class GameManager : MonoBehaviour {
         }
 
         DetermineSpawning();
-
         CheckForDifficultyIncrease();
+
+        // if the Player is not alive and our score tracker has not saved data yet
+        if (!IsPlayerAlive && m_highScoreTracker.CanSave)
+        {
+            m_highScoreTracker.CanSave = false;
+            // TODO need to make sure this fires only Once per death
+            UpdateHighScoreList();
+            m_highScoreTracker.SaveScores(m_highScores);
+        }
+    }
+
+    public void UpdateHighScoreList ()
+    {
+        // Add our score to the list, sort and reverse to list in descending order
+        m_highScores.Add(CurrentScore);
+        m_highScores.Sort();
+        m_highScores.Reverse();
+
+        // prune scores past 10th entry
+        if (m_highScores.Count > 9)
+        {
+            for (int i = 10; i < m_highScores.Count; i++)
+            {
+                m_highScores.RemoveAt(i);
+            }
+        }
     }
 
     // This is called every set amount of time to adjust parameters that will affect difficulty
@@ -88,6 +132,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Checks to see if it is time to start spawning coins or obstacles
     public void DetermineSpawning ()
     {
         if (Time.time >= m_nextObstacleSpawnTime)
@@ -110,6 +155,8 @@ public class GameManager : MonoBehaviour {
         UIManager.S.UpdateScoreText();
     }
 
+    #region Properties
+
     public int CurrentScore
     {
         get { return m_currentScore; }
@@ -128,12 +175,6 @@ public class GameManager : MonoBehaviour {
         set { b_isGameActive = value; }
     }
 
-    public bool CanSpawnObstacles
-    {
-        get { return b_CanSpawnObstacles; }
-        set { b_CanSpawnObstacles = value; }
-    }
-
     public float ObstacleSpawnTime
     {
         get { return m_nextObstacleSpawnTime; }
@@ -145,4 +186,5 @@ public class GameManager : MonoBehaviour {
         get { return m_nextCoinFormationSpawnTime; }
         set { m_nextCoinFormationSpawnTime = value; }
     }
+    #endregion
 }
