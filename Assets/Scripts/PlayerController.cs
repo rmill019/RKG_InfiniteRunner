@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        print("Anim Speed: " + m_anim.speed);
 		if (GameManager.S.IsGameActive)
             m_anim.SetBool("IsGameActive", true);
 
@@ -187,6 +188,11 @@ public class PlayerController : MonoBehaviour {
         m_anim.SetBool("IsDead", true);
 
         print("Dead");
+    }
+
+    public void IncreaseAnimationSpeed (float incAmount)
+    {
+        m_anim.speed += incAmount;
     }
 
     float GetAnimatorStateLength(string stateName)

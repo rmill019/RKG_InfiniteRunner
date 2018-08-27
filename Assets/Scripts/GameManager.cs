@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
     public float m_spawnIntervalDec = 0.025f;
     public float m_playerGravityInc = 0.25f;
     public float m_obstacleSpeedInc = 0.25f;
+    public float m_animSpeedInc = 0.15f;
 
     private int m_currentScore;
     private bool b_isPlayerAlive = true;
@@ -73,7 +74,7 @@ public class GameManager : MonoBehaviour {
 
         // We cannot spawn until the initial countdown has finished. So the initial spawnTime needs to take this into account
         m_nextObstacleSpawnTime = Time.time + GameManager.S.m_countdownLength + m_timeBetweenSpawns;
-        print("Setting Spawn time to: " + m_nextObstacleSpawnTime);
+        //print("Setting Spawn time to: " + m_nextObstacleSpawnTime);
 
         // Set Coin spawn time to a ridiculously high number to ensure that all obstacles are spawned first;
         m_nextCoinFormationSpawnTime = Time.time + 1000f;
@@ -130,6 +131,7 @@ public class GameManager : MonoBehaviour {
             m_backgroundSpeed += m_backgroundSpeedInc;
             m_timeBetweenSpawns -= m_spawnIntervalDec;
             m_player.GetComponent<PlayerController>().m_fallSpeed += m_playerGravityInc;
+            m_player.GetComponent<PlayerController>().IncreaseAnimationSpeed(m_animSpeedInc);
             Obstacle.SPEED_X += m_obstacleSpeedInc;
             // Reset the time to increase difficulty
             m_increaseDifficultyTime = Time.time +  m_difficultyInterval;
@@ -141,14 +143,14 @@ public class GameManager : MonoBehaviour {
     {
         if (Time.time >= m_nextObstacleSpawnTime)
         {
-            print("Next Obstacle Spawn Time: " + m_nextObstacleSpawnTime);
-            print("Starting Obstacle Coroutine");
+            //print("Next Obstacle Spawn Time: " + m_nextObstacleSpawnTime);
+            //print("Starting Obstacle Coroutine");
             StartCoroutine(ObjectSpawner.S.SpawnObstacles());
         }
 
         if (Time.time >= m_nextCoinFormationSpawnTime)
         {
-            print("Starting CoinSpawn");
+            //print("Starting CoinSpawn");
             ObjectSpawner.S.SpawnCoins();
         }
     }
