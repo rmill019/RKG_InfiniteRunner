@@ -7,6 +7,7 @@ public enum ObstacleType { Grounded, InAir, Collectable }
 public class Obstacle : MonoBehaviour {
 
     // MAGIC NUMBERS
+    public static float START_SPEED_X = 20f;
     public static float SPEED_X = 20f;
     public static float m_coinHeightOffsetMin = 4f;
     public static float m_coinHeightOffsetMax = 8f;
@@ -48,7 +49,7 @@ public class Obstacle : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        
+        print("SpeedX: " + SPEED_X);
         if (gameObject.activeInHierarchy && b_canMove)
         {
             if (m_obstacleType == ObstacleType.Grounded)

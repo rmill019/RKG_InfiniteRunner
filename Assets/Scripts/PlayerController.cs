@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour {
     // b_canPerformAction is needed as an intermediary value to allow input for actions. Once
     // the action is performed we set this to false to prevent further input.
     private bool b_canPerformAction = false;
+    private bool b_canReadInput = true;
     private float m_startCapsuleSizeX;
     private float m_colliderTimer = 0f;
 
@@ -39,11 +40,19 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        print("Anim Speed: " + m_anim.speed);
-		if (GameManager.S.IsGameActive)
+
+        #if UNITY_ANDROID || UNITY_IOS
+        // Input on Mobile is not that responsive on Phase.Ended so we have this here as a backup.
+        // If there are no touches on screen then we can assume that it is save to read input.
+        if (Input.touchCount == 0)
+                b_canReadInput = true;
+        #endif
+
+        //print("Anim Speed: " + m_anim.speed);
+        if (GameManager.S.IsGameActive)
             m_anim.SetBool("IsGameActive", true);
 
-        if (m_anim.GetBool ("IsGameActive"))
+        if (m_anim.GetBool("IsGameActive"))
         {
             SetPlayerState();
             PerformAction (m_playerState);
@@ -52,6 +61,7 @@ public class PlayerController : MonoBehaviour {
             if (Time.time >= m_colliderTimer && b_collidersModified)
                 ResetColliders();
         }
+
 	}
 
 
@@ -96,7 +106,13 @@ public class PlayerController : MonoBehaviour {
 
             if (m_playerState == PlayerState.Running && Input.GetButtonDown("Roll"))
                 m_playerState = PlayerState.Rolling;
-        #endif
+
+            if ((m_playerState == PlayerState.Running || m_playerState == PlayerState.Rolling || m_playerState == PlayerState.Jumping) && m_anim.GetBool("IsDead"))
+            {
+                StartCoroutine(FallToDeath(0.15f));
+                m_playerState = PlayerState.Dead;
+            }
+            #endif
 
         #if UNITY_ANDROID || UNITY_IOS
             if (m_playerState == PlayerState.Running) { CalculateTouchDelta(); }
@@ -105,12 +121,20 @@ public class PlayerController : MonoBehaviour {
             {
                 m_playerState = PlayerState.Jumping;
                 b_canPerformAction = false;
+                direction = Vector2.zero;
             }
 
             if (m_playerState == PlayerState.Running && direction.y < -threshold && b_canPerformAction)
             {
                 m_playerState = PlayerState.Rolling;
                 b_canPerformAction = false;
+                direction = Vector2.zero;
+            }
+
+            if ((m_playerState == PlayerState.Running || m_playerState == PlayerState.Rolling || m_playerState == PlayerState.Jumping) && m_anim.GetBool("IsDead"))
+            {
+                StartCoroutine(FallToDeath(0.15f));
+                m_playerState = PlayerState.Dead;
             }
         #endif
 
@@ -145,6 +169,20 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    IEnumerator FallToDeath (float fallRate)
+    {
+        Vector3 deadPos = m_startPos;
+        Vector3 newPos = transform.position;
+        deadPos.y = -11f;
+
+        while (transform.position.y > deadPos.y)
+        {
+            newPos.y -= fallRate;
+            transform.position = newPos;
+            yield return null;
+        }
+    }
+
     void CalculateTouchDelta()
     {
         if (Input.touchCount > 0)
@@ -155,16 +193,27 @@ public class PlayerController : MonoBehaviour {
             switch (touch.phase)
             {
                 case TouchPhase.Began:
+                    print("Input Began");
                     startPos = touch.position;
                     b_directionChosen = false;
                     break;
                 case TouchPhase.Moved:
                     direction = touch.position - startPos;
+                    if (direction.magnitude > threshold && b_canReadInput)
+                    {
+                        b_canReadInput = false;
+                        //print("Can Read Input: " + b_canReadInput);
+                        //print("Input Mag: " + direction.magnitude);
+                        endPos = touch.position;
+                        b_directionChosen = true;
+                    }
                     break;
                 case TouchPhase.Ended:
-                    print("Ended");
-                    endPos = touch.position;
-                    b_directionChosen = true;
+                    print("Input STOPPED");
+                    b_canReadInput = true;
+                    break;
+                case TouchPhase.Canceled:
+                    b_canReadInput = true;
                     break;
                 default:
                     break;

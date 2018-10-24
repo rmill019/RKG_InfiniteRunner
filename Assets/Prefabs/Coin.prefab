@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_obstacleType: 2
-  m_lifeSpan: 5
+  m_lifeSpan: 4
   m_xMinDistance: 35
   m_xMaxDistance: 40
   m_yMinDistance: 0.1

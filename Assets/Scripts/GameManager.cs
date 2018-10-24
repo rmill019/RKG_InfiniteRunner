@@ -11,12 +11,14 @@ public class GameManager : MonoBehaviour {
     public float m_timeBetweenSpawns = 2f;
     [Tooltip("How often should the difficulty increase")]
     public float m_difficultyInterval = 5f;
+    public float m_minSpawnInterval = 0.75f;
     public GameObject m_player;
     public Transform m_ground;
 
     [Header("These setting affect the difficuly scaling")]
     public float m_backgroundSpeedInc = 0.1f;
     public float m_spawnIntervalDec = 0.025f;
+    public float m_jumpAccInc = 0.25f;
     public float m_playerGravityInc = 0.25f;
     public float m_obstacleSpeedInc = 0.25f;
     public float m_animSpeedInc = 0.15f;
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour {
     // High Score Tracking variables
     private List<int> m_highScores;
     private HighScoreTracker m_highScoreTracker;
+    private PlayerController m_PlayerController;
 
     private void Awake()
     {
@@ -53,6 +56,9 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
+        // Reset our original Obstacles speed once we start the level again
+        Obstacle.SPEED_X = Obstacle.START_SPEED_X;
+
         m_currentScore = 0;
         // Initialize m_highScores to 0 if no file exists on Disk
         PlayerHighScores scores = m_highScoreTracker.LoadScores();
@@ -71,6 +77,8 @@ public class GameManager : MonoBehaviour {
 
         if (m_player == null)
             m_player = GameObject.FindGameObjectWithTag("Player");
+
+        m_PlayerController = m_player.GetComponent<PlayerController>();
 
         // We cannot spawn until the initial countdown has finished. So the initial spawnTime needs to take this into account
         m_nextObstacleSpawnTime = Time.time + GameManager.S.m_countdownLength + m_timeBetweenSpawns;
@@ -125,17 +133,24 @@ public class GameManager : MonoBehaviour {
     // This is called every set amount of time to adjust parameters that will affect difficulty
     public void CheckForDifficultyIncrease ()
     {
-        if (Time.time > m_increaseDifficultyTime)
+        // Make sure our m_PlayerController is not null so we can modify values in it
+        if (Time.time > m_increaseDifficultyTime && m_PlayerController != null)
         {
-            print("INCREASE DIFFICULTY");
+            //print("INCREASE DIFFICULTY");
             m_backgroundSpeed += m_backgroundSpeedInc;
-            m_timeBetweenSpawns -= m_spawnIntervalDec;
-            m_player.GetComponent<PlayerController>().m_fallSpeed += m_playerGravityInc;
-            m_player.GetComponent<PlayerController>().IncreaseAnimationSpeed(m_animSpeedInc);
+            // Only decrease our time between spawns if we have not yet reached our minimum time threshold for spawn interval
+            if (m_timeBetweenSpawns > m_minSpawnInterval)
+                m_timeBetweenSpawns -= m_spawnIntervalDec;
+
+            m_PlayerController.m_fallSpeed += m_playerGravityInc;
+            m_PlayerController.m_jumpSpeed += m_jumpAccInc;
+            m_PlayerController.IncreaseAnimationSpeed(m_animSpeedInc);
             Obstacle.SPEED_X += m_obstacleSpeedInc;
             // Reset the time to increase difficulty
-            m_increaseDifficultyTime = Time.time +  m_difficultyInterval;
+            m_increaseDifficultyTime = Time.time + m_difficultyInterval;
         }
+        else
+            Debug.LogWarning("No PlayerController assigned to m_PlayerController");
     }
 
     // Checks to see if it is time to start spawning coins or obstacles
